@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage[left=1.5cm, right=2cm]{geometry}
+
+\title{Computer Science Project}
+\author{Zakariyya Kurmally (2315839), Ihsaan Ramjanee (2315007), Nirvesh Bhagirath (2313628)}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+\pagebreak
+\section{Rules of Cartesia}
+Cartesia is a 2D platformer. The aim to the game is to collect
+gold enough gold coins to unlock the chest at the bottom of the 
+map. You will need to avoid traps, monsters and falling into the void. 
+
+\begin{itemize}
+    \item WASD or arrow keys can be used to move the character
+    \item Player starts with 3 lives
+    \item Falling into a trap or off the map results in death
+\end{itemize}
+
+\section{Function description}
+To understand the working of the following functions, it will be important 
+to know the contents of the struct GameState. The latter contains information 
+needed for these functions to work properly. Here are its components and their
+description:
+
+\begin{center}
+
+    \begin{tabular} {|c|c|}
+        \hline
+        Texture2D tileset[NUM\textunderscore OF\textunderscore TEXTURES]; & Array of textures \\
+        \hline
+        Texture2D bg1; & Background image\\
+        \hline
+        Particle particles[PARTICLES\textunderscore COUNT]; & Array of particles\\
+        \hline
+        int card[MAP\textunderscore SIZE][MAP\textunderscore SIZE]; & Card array representing entities\\
+        \hline
+        int collisionMap[MAP \textunderscore SIZE][MAP\textunderscore SIZE]; & Array indicating where collisions should occur \\
+        \hline
+        int playerPos[2]; & Contains the coordinates of the player\\
+        \hline
+        int coinsCollected; & ...\\
+        \hline
+        int remainingLife;  & ...\\
+        \hline
+        Sound sounds[2]; & Array of sounds used \\
+        \hline
+        Direction direction; & Direction the player is facing\\
+        \hline
+        int playerMoving; & Indicates if the player is moving\\
+        \hline
+        Texture2D scarfy; & Spritesheet of player character\\
+        \hline
+        int framesCounter; & \\
+        int framesSpeed; & Used to handle sprite animation\\
+        int currentFrame; & \\
+        Rectangle frameRec; &\\
+        \hline
+    \end{tabular}
+    
+\end{center}
+
+\subsection{utils.c}
+Contains utility functions mostly for handling graphics and in calculations. 
+\begin{itemize}
+    \item \textunderscore initGraphics (): Starts the window and audio devices
+    \item \textunderscore processImage (const char* filepath, Rectangle src
+    Vector2 size): Loads image files from disk, resizes them, converts them
+    to the proper data type and returns them
+    \item \textunderscore loadResources(GameState* currGameState): loads all the images and
+    sounds from disk into memory. Makes use of \textunderscore processImage
+    \item \textunderscore unloadResources(GameState* currGameState): unloads all the loaded 
+    images from memory
+    \item \textunderscore updateFrameInfo(GameState* currGameState): used to keep track 
+    of frame times for character animation
+    \item \textunderscore initParticles(GameState* currGameState): creates particles
+    with random values for position and speed
+    \item \textunderscore displayParticles(GameState* currGameState): 
+        outputs the particles screen
+    \item \textunderscore updateParticles(GameState* currGameState): 
+        updates the position of 
+    particles based on the speed ans re-positions them if need be
+\end{itemize}
+
+\subsection{core.c}
+Contains the main functions of the game. Used for displaying graphics and initialising
+the map.
+\begin{itemize}
+    \item \textunderscore init \textunderscore card (GameState* currGameState): fills the map 
+    with entities like platforms, traps, trees. It is called before the 
+    main game loop
+    \item \textunderscore display \textunderscore card (GameState* currGameState): loops through
+    the array card, located inside currGameState, and displays the appropriate textures
+    \item \textunderscore handle \textunderscore player (GameState* currGameState): handles player movement,
+    collisions and player respawns
+\end{itemize}
+
+\section{Problems encountered and how they were dealt with}
+\subsection{VCS}
+When working on such a project, we would often need to switch back to previous versions of
+the code after a certain implementation went south. It was becoming a pain to remember what 
+was changed and how to revert back. This was solved using git which allowed changes to be commited 
+and easy reversion.
+
+\subsection{Unscalable function parameters}
+Many functions of Cartesia needed access to distinct information about the game state and 
+textures. Early on, we noticed that passing them one by one would have been an absolute
+headache, especially when unloading all the resources since we make use of more than 10 of them. 
+As such, we created the GameState struct which holds all the necessary information for the proper
+functioning of our functions.
+
+\section{Limitations}
+\subsection{Not cross-platform (Yet)}
+C does not statically link with Raylib by default. As such, the executable is not distributable.
+However, shipping the DLL (for Windows) or the SO (for Linux) along with the compiled binary 
+should solve this problem. Furthermore, Raylib has build scripts for Android.
+
+\subsection{No save points}
+Apart from loading in necessary game resources, Cartesia does not yet have functionality to
+save or load a game from a file on disk.
+
+\section{Individual Contributions}
+\subsection {Bhagirath Nirvesh (25\%)}
+Handled the particles system, sound and the display of textures.
+\subsection {Ihsaan Ramjanee (35\%)}
+Map initialisation, collision detection and texture placement.
+\subsection {Zakariyya Kurmally (40\%)}
+Graphics processing, player movement, library setup as well as structuring the project.
+
+    
+\end{document}
